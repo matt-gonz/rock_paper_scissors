@@ -1,6 +1,6 @@
 // CPU outputs rock, paper, or scissors
 function computerPlay(){
-    cpuSelection = Math.floor((Math.random() * 3) + 1);
+    let cpuSelection = Math.floor((Math.random() * 3) + 1);
     if (cpuSelection === 1){
         cpuSelection = "Rock";
     }
@@ -16,8 +16,7 @@ function computerPlay(){
 
 function playRound(playerSelection, computerSelection){
     // game variations
-    playerSelection = capitalizeFirstChar(playerSelection);
-    isValidated = validateInput(playerSelection);
+    let outcome = null;
 
     if (playerSelection === computerSelection){
         outcome = "draw";
@@ -37,13 +36,14 @@ function playRound(playerSelection, computerSelection){
 // Play a five round game that keeps score
 // and reports a winner/loser at the end.
 function game() {
-    playerScore = 0;
-    computerScore = 0;
-    whoWon = null;
+    let playerScore = 0;
+    let computerScore = 0;
+    let whoWon = null;
+    let results = null;
     for (let i = 0; i < 5; i++){
         let playerSelection = playerSelect();
         let computerSelection = computerPlay();
-        outcome = playRound(playerSelection, computerSelection);
+        let outcome = playRound(playerSelection, computerSelection);
         if (outcome === "win"){
             playerScore++;
             whoWon = "Player";
@@ -74,16 +74,16 @@ function game() {
 
 // Prompts user selection
 function playerSelect(){
-    playerSelection = promptPlayerSelection();
+    let playerSelection = promptPlayerSelection();
     playerSelection = capitalizeFirstChar(playerSelection);
-    validatedPlayerSelection = validateInput(playerSelection); 
+    let validatedPlayerSelection = validateInput(playerSelection); 
     
     return validatedPlayerSelection;
 }
 
 // Helper function(s)
 function promptPlayerSelection(message="Type Rock, Paper, or Scissors"){
-    playerSelection = prompt(message, "Rock");
+    let playerSelection = prompt(message, "Rock");
     return playerSelection;
 }
 

@@ -1,3 +1,6 @@
+let playerScore = 0;
+let computerScore = 0;
+
 // CPU outputs rock, paper, or scissors
 function computerPlay(){
     let cpuSelection = Math.floor((Math.random() * 3) + 1);
@@ -33,45 +36,6 @@ function playRound(playerSelection, computerSelection){
     return outcome;
 }
 
-// Play a five round game that keeps score
-// and reports a winner/loser at the end.
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let whoWon = null;
-    let results = null;
-    for (let i = 0; i < 5; i++){
-        let playerSelection = playerSelect();
-        let computerSelection = computerPlay();
-        let outcome = playRound(playerSelection, computerSelection);
-        if (outcome === "win"){
-            playerScore++;
-            whoWon = "Player";
-        }
-        else if (outcome === "lose"){
-            computerScore++;
-            whoWon = "Computer"
-        }
-        else{
-            whoWon = "Tie"
-        }
-        console.log("Round: " + String(i+1) + "\n"
-            + "Player Chose: " + playerSelection + "\n"
-            + "Computer Chose: " + computerSelection + "\n"
-            + whoWon + " won the round");
-    }
-    if (playerScore === computerScore){
-        results = "It's a draw!";
-    }
-    else if (playerScore > computerScore){
-        results = "Player wins!";
-    }
-    else{
-        results = "CPU wins!";
-    }
-    console.log("Results: " + results);
-}
-
 // Prompts user selection
 function playerSelect(){
     let playerSelection = promptPlayerSelection();
@@ -104,5 +68,39 @@ function validateInput(userInput){
     return userInput;
 }
 
+document.addEventListener('click', function (e){
+    const playerChoice = e.target.textContent;
+    const computerChoice = computerPlay();
+    const resultChoices = document.querySelector('.result-choices');
+    resultChoices.textContent = `Player chose: ${playerChoice} | 
+        CPU chose: ${computerChoice}`;
+    const outcome = playRound(playerChoice, computerChoice);
+    let roundOutcomeMsg = null;
+    if (outcome === "draw"){
+        roundOutcomeMsg = "It's a draw!";
+    }
+    else if (outcome === "win"){
+        roundOutcomeMsg = "Player wins!";
+        playerScore += 1;
+    }
+    else{
+        roundOutcomeMsg = "CPU wins!";
+        computerScore += 1;
+    }
 
-game();
+    const scoreBoard = document.querySelector('.result-scoreBoard');
+    scoreBoard.textContent = `Player score: ${playerScore} | 
+        CPU score: ${computerScore}`;
+
+    const roundOutcome = document.querySelector('.result-roundOutcome');
+    roundOutcome.textContent = `Round Outcome: ${roundOutcomeMsg}`;
+
+    const overallOutcome = document.createElement('h2');
+    overallOutcome.classList.add('result-overallOutcome');
+    overallOutcome.textContent = roundOutcomeMsg;
+
+    const container = document.querySelector('.container');
+    if (playerScore === 5 || computerScore === 5){
+        container.appendChild(overallOutcome);
+    }
+});

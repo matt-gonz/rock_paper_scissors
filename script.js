@@ -1,6 +1,37 @@
 let playerScore = 0;
 let computerScore = 0;
 
+const scoreInfo = document.getElementById('scoreInfo');
+const scoreMessage = document.getElementById('scoreMessage');
+const playerScorePara = document.getElementById('playerScore');
+const computerScorePara = document.getElementById('computerScore');
+const gameOverMsg = document.getElementById('gameOverMsg');
+const resetBtn = document.getElementById('resetBtn');
+const gameOverModal = document.getElementById('gameOverModal');
+const rockBtn = document.getElementById('rockBtn');
+const paperBtn = document.getElementById('paperBtn');
+const scissorsBtn = document.getElementById('scissorsBtn');
+const playerSign = document.getElementById('playerSign');
+const computerSign = document.getElementById('computerSign');
+
+rockBtn.addEventListener('click', () => handleClick('Rock'));
+paperBtn.addEventListener('click', () => handleClick('Paper'));
+scissorsBtn.addEventListener('click', () => handleClick('Scissors'));
+resetBtn.addEventListener('click', resetGame);
+
+function handleClick(playerSelection){
+    if (isGameOver()){
+        return;
+    }
+
+    playRound(playerSelection);
+
+    if (isGameOver()){
+        setFinalMessage();
+        toggleGameOverModal();
+    }    
+}
+
 // CPU outputs rock, paper, or scissors
 function computerPlay(){
     let cpuSelection = Math.floor((Math.random() * 3) + 1);
@@ -17,38 +48,81 @@ function computerPlay(){
     return cpuSelection;
 }
 
-function playRound(playerSelection, computerSelection){
-    // game variations
+function playRound(playerSelection){
+    let computerSelection = computerPlay();
     let outcome = null;
+    let winner = null;
 
     if (playerSelection === computerSelection){
-        outcome = "draw";
+        winner = "draw";
+        outcome = "It's a draw!";
+
     }
     else if ((playerSelection === "Rock" && computerSelection === "Scissors") ||
         (playerSelection === "Paper" && computerSelection === "Rock") ||
         (playerSelection === "Scissors" && computerSelection === "Paper")){
-            outcome = "win";
+            winner = "player";
+            outcome = "You win!";
+            playerScore += 1;
     }
     else{
-        outcome = "lose";
+        winner = "computer";
+        outcome = "You lose...";
+        computerScore += 1;
     }
 
-    return outcome;
-}
-
-// Prompts user selection
-function playerSelect(){
-    let playerSelection = promptPlayerSelection();
-    playerSelection = capitalizeFirstChar(playerSelection);
-    let validatedPlayerSelection = validateInput(playerSelection); 
+    scoreInfo.textContent = outcome;
+    updateSigns(playerSelection, computerSelection);
+    updateScoreMessage(winner, playerSelection, computerSelection);
+    updateScoreDisplay();
     
-    return validatedPlayerSelection;
+    return;
 }
 
-// Helper function(s)
-function promptPlayerSelection(message="Type Rock, Paper, or Scissors"){
-    let playerSelection = prompt(message, "Rock");
-    return playerSelection;
+function updateSigns(playerSelection, computerSelection){
+    switch (playerSelection){
+        case 'Rock':
+            playerSign.textContent = '✊';
+            break;
+        case 'Paper':
+            playerSign.textContent = '✋';
+            break;
+        case 'Scissors':
+            playerSign.textContent = '✌';
+            break;
+    }
+
+    switch (computerSelection){
+        case 'Rock':
+            computerSign.textContent = '✊';
+            break;
+        case 'Paper':
+            computerSign.textContent = '✋';
+            break;
+        case 'Scissors':
+            computerSign.textContent = '✌';
+            break;
+    }
+}
+
+function updateScoreDisplay(){
+    playerScorePara.textContent = `Player: ${playerScore}`;
+    computerScorePara.textContent = `Computer: ${computerScore}`;
+}
+
+function updateScoreMessage(winner, playerSelection, computerSelection){
+    let message = null;
+    if (winner === 'player'){
+        message = `${playerSelection} beats ${computerSelection}`;
+    }
+    else if (winner === 'computer'){
+        message = `${playerSelection} loses to ${computerSelection}`;
+    }
+    else{
+        message = `${playerSelection} ties with ${computerSelection}`;
+    }
+
+    scoreMessage.textContent = message;
 }
 
 function capitalizeFirstChar(myString){
@@ -59,48 +133,31 @@ function capitalizeFirstChar(myString){
     return myString;
 }
 
-// Validates user input
-function validateInput(userInput){
-    while (userInput !== "Rock" && userInput !== "Paper" && userInput !== "Scissors"){
-        userInput = promptPlayerSelection(message="Try again:\nType Rock, Paper, or Scissors");
-    }
-
-    return userInput;
+function isGameOver(){
+    return playerScore === 5 || computerScore === 5;
 }
 
-document.addEventListener('click', function (e){
-    const playerChoice = e.target.textContent;
-    const computerChoice = computerPlay();
-    const resultChoices = document.querySelector('.result-choices');
-    resultChoices.textContent = `Player chose: ${playerChoice} | 
-        CPU chose: ${computerChoice}`;
-    const outcome = playRound(playerChoice, computerChoice);
-    let roundOutcomeMsg = null;
-    if (outcome === "draw"){
-        roundOutcomeMsg = "It's a draw!";
-    }
-    else if (outcome === "win"){
-        roundOutcomeMsg = "Player wins!";
-        playerScore += 1;
+function setFinalMessage(){
+    if (playerScore > computerScore){
+        gameOverMsg.textContent = "You won!";
     }
     else{
-        roundOutcomeMsg = "CPU wins!";
-        computerScore += 1;
+        gameOverMsg.textContent = "You lost...";
     }
+}
 
-    const scoreBoard = document.querySelector('.result-scoreBoard');
-    scoreBoard.textContent = `Player score: ${playerScore} | 
-        CPU score: ${computerScore}`;
+function toggleGameOverModal(){
+    gameOverModal.classList.toggle('active');
+}
 
-    const roundOutcome = document.querySelector('.result-roundOutcome');
-    roundOutcome.textContent = `Round Outcome: ${roundOutcomeMsg}`;
-
-    const overallOutcome = document.createElement('h2');
-    overallOutcome.classList.add('result-overallOutcome');
-    overallOutcome.textContent = roundOutcomeMsg;
-
-    const container = document.querySelector('.container');
-    if (playerScore === 5 || computerScore === 5){
-        container.appendChild(overallOutcome);
-    }
-});
+function resetGame(){
+    playerScore = 0;
+    computerScore = 0;
+    scoreInfo.textContent = 'Choose your weapon';
+    scoreMessage.textContent = 'First to 5 points wins';
+    playerScorePara.textContent = 'Player: 0';
+    computerScorePara.textContent = 'Computer: 0';
+    playerSign.textContent = '❔';
+    computerSign.textContent = '❔';
+    gameOverModal.classList.remove('active'); 
+}

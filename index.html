@@ -3,22 +3,60 @@
     <head>
         <meta charset="UTF-8">
         <title>Rock, Paper, Scissors</title>
-        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js" defer></script>
     </head>
 
     <body>
-        <div class="container">
-            <h1 class="title">Rock, Paper, Scissors</h1>
-            <h2 class="result-roundOutcome">Round Outcome: _ </h2>
-            <h2 class="result-choices">Player chose: _ | CPU chose: _ </h2>
-            <h2 class="result-scoreBoard">Player score: _ | CPU score: _ </h2>
+        <header class="header">
+            <h1 class="title">ROCK PAPER SCISSORS</h1>
+        </header>
+        <main class="main">
+            <div class="scoreboard">
+                <h2 class="score-info" id="scoreInfo">Choose your weapon</h2>
+                <h3 class="score-message" id="scoreMessage">
+                    First to 5 points wins
+                </h3>
+                <div class="scores-container">
+                    <div class="score-box">
+                        <div class="sign" id="playerSign">❔</div>
+                        <p class="score" id="playerScore">Player: 0</p>
+                    </div>
+                    <div class="score-box">
+                        <div class="sign" id="computerSign">❔</div>
+                        <p class="score" id="computerScore">Computer: 0</p>
+                      </div>
+                </div>
+            </div>
+            <div class="playerBtns">
+                <button class="btn player-button" id="rockBtn">
+                    <div class="sign">✊</div>
+                </button>
+                <button class="btn player-button" id="paperBtn">
+                    <div class="sign">✋</div>
+                </button>
+                <button class="btn player-button" id="scissorsBtn">
+                    <div class="sign">✌</div>
+                </button>
+            </div>
+        </main>
+        <footer class="footer">
+            <p>
+              Copyright ©
+              <script>
+                document.write(new Date().getFullYear())
+              </script>
+              Matthew Gonzalez
+            </p>
+            <a href="https://github.com/matt-gonz" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </footer>        
+        <div class="modal" id="gameOverModal">
+            <p class="modal-title" id="gameOverMsg"></p>
+            <button class="btn btn-reset" id="resetBtn">Play again</button>
         </div>
 
-        <div class="playerBtns">
-            <button class="playerBtn">Rock</button>
-            <button class="playerBtn">Paper</button>
-            <button class="playerBtn">Scissors</button>
-        </div>
 
     </body>
 </html>
